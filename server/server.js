@@ -5,6 +5,8 @@ const app = express()
 const port= process.env.PORT || 1010
 
 const  user= require('./Routes/user')
+const  product= require('./Routes/product')
+
 
 // Database Connection ( Mongodb Atlas)
 
@@ -19,6 +21,8 @@ app.use(express.json())  // json file getting
 
 // Routes 
 app.use("", require("./Routes/user"))
+app.use("/product", require("./Routes/product"))
+
 
 
 
