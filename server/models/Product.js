@@ -12,10 +12,10 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  companyName: {
-    type: String,
-    required: true,
-  },
+  // companyName: {
+  //   type: String,
+  //   required: true,
+  // },
   model: {
     type: String,
     required: true,

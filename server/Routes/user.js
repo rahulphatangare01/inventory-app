@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 const JWT_SECRET = 'S&&scM_b%$#Wram';
 
+var authuser = require('../middleware/auth');
 
 
 
@@ -99,16 +100,19 @@ router.post('/signup', [
   
   });
 
- // Get user details 
-router.get('/:id',async(req,res)=>{
-    try{
-const user =  await User.findById(req.params.id)
-const {password,updatedAt, ...other} = user._doc
+ 
 
-res.status(200).json(other)
-    }catch(err){
-       res.status(500).json(err) 
-    }
+// ROUTE 3: Get loggedin User Details using: POST  Login required
+router.get('/getuser', authuser,  async (req, res) => {
+
+  try {
+    userId = req.user.id;
+    const user = await User.findById(userId).select("-password")
+    res.send(user)
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
 })
 
 module.exports = router
