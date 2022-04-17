@@ -27,7 +27,7 @@ router.post(
     }
     try {
       // Create a new product
-   let   business = await  Business ({
+      let business = await Business({
         companyName: req.body.companyName,
         phone: req.body.phone,
         ownerName: req.body.ownerName,
@@ -38,7 +38,7 @@ router.post(
         zip: req.body.zip,
         pan: req.body.pan,
       });
-      business.save()
+      business.save();
       // res.json(product)
       res.json({ business });
     } catch (error) {
@@ -49,12 +49,21 @@ router.post(
 );
 //  Rote no --> 2  Route for GET BusinessInfo
 
-router.get("/getbusiness/:id", authuser, async (req, res) => {
+// router.get("/getbusiness/:id", authuser, async (req, res) => {
+//   try {
+//     const business = await Business.findById(req.params.id);
+//     res.status(200).json(business);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
+router.get("/getbusniess", authuser, async (req, res) => {
   try {
-    const business = await Business.findById(req.params.id);
-    res.status(200).json(business);
-  } catch (err) {
-    res.status(500).json(err);
+    const business = await Business.find({ user: req.user.id });
+    res.json(business);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("internal server Error");
   }
 });
 //  Rote no --> 3 Route for Update product
