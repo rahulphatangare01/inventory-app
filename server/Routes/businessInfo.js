@@ -49,14 +49,7 @@ router.post(
 );
 //  Rote no --> 2  Route for GET BusinessInfo
 
-// router.get("/getbusiness/:id", authuser, async (req, res) => {
-//   try {
-//     const business = await Business.findById(req.params.id);
-//     res.status(200).json(business);
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
+
 router.get("/getbusniess", authuser, async (req, res) => {
   try {
     const business = await Business.find({ user: req.user.id });

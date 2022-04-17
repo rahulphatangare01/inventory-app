@@ -44,12 +44,23 @@ router.post(
 );
 //  Rote no --> 2  Route for GET BusinessInfo
 
-router.get("/getbuyer/:id", authuser, async (req, res) => {
+// router.get("/getbuyer/:id", authuser, async (req, res) => {
+//   try {
+//     const buyer = await Buyer.findById(req.params.id);
+//     res.status(200).json(buyer);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+
+// });
+
+router.get("/getbuyer", authuser, async (req, res) => {
   try {
-    const buyer = await Buyer.findById(req.params.id);
-    res.status(200).json(buyer);
-  } catch (err) {
-    res.status(500).json(err);
+    const buyer = await Buyer.find({ user: req.user.id });
+    res.json(buyer);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("internal server Error");
   }
 });
 //  Rote no --> 3 Route for Update product
