@@ -10,6 +10,9 @@ const port= process.env.PORT || 5000
 
 const  user= require('./Routes/user')
 const  product= require('./Routes/product')
+const business=require('./Routes/businessInfo')
+const buyer=require('./Routes/buyer')
+
 
 
 // Database Connection ( Mongodb Atlas)
@@ -26,6 +29,9 @@ app.use(express.json())  // json file getting
 // Routes 
 app.use("/auth", require("./Routes/user"))
 app.use("/product", require("./Routes/product"))
+app.use("/business",require("./Routes/businessInfo"))
+app.use("/buyer",require("./Routes/buyer"))
+
 
 
 

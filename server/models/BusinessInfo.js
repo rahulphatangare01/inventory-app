@@ -38,6 +38,6 @@ const business_InfoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-});
-const businessModel = mongoose.model('business', business_InfoSchema);
+});                                 //business
+const businessModel = mongoose.model('Business', business_InfoSchema);
 module.exports = businessModel;

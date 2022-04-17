@@ -68,7 +68,7 @@ router.put('/updateproduct/:id',authuser,async (req,res)=>{
    
 })
 
-//  Rote no --> 3 Route for Delete product
+//  Rote no --> 4 Route for Delete product
 
 
 router.delete('/deleteproduct/:id',authuser,async (req,res)=>{
