@@ -12,6 +12,8 @@ const  user= require('./Routes/user')
 const  product= require('./Routes/product')
 const business=require('./Routes/businessInfo')
 const buyer=require('./Routes/buyer')
+const supplier=require('./Routes/supplier')
+
 
 
 
@@ -31,6 +33,8 @@ app.use("/auth", require("./Routes/user"))
 app.use("/product", require("./Routes/product"))
 app.use("/business",require("./Routes/businessInfo"))
 app.use("/buyer",require("./Routes/buyer"))
+app.use("/supplier",require("./Routes/supplier"))
+
 
 
 
