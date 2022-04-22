@@ -37,6 +37,7 @@ const business_InfoSchema = new mongoose.Schema({
   pan: {
     type: String,
     required: true,
+    unique:true,
   },
 });                                 //business
 const businessModel = mongoose.model('Business', business_InfoSchema);

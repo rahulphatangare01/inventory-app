@@ -7,7 +7,7 @@ const router = express.Router();
 //  Rote no --> 1 Route for crete BusinessInfo
 router.post(
   "/createbusinessInfo",
-  authuser,
+  
   [
     body("companyName", "Enter a valid company name").isLength({ min: 3 }),
     body("phone", "Enter a 10 character ").isLength({ min: 10 }),
@@ -18,7 +18,7 @@ router.post(
     body("state", "Enter a State ").isLength({ min: 3 }),
     body("zip", "Enter a Zip code ").isLength({ min: 5 }),
     body("pan", "Enter a PAN Number ").isLength({ min: 3 }),
-  ],
+  ],authuser,
   async (req, res) => {
     // If there are errors, return Bad request and the errors
     const errors = validationResult(req);
@@ -26,8 +26,17 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
     try {
-      // Create a new product
-      let business = await Business({
+      let  business = await Business.findOne({ 
+         email: req.body.email,
+        pan:req.body.pan
+      });
+      if (business) {
+        return res.status(400).json({ error: "This business is allready register with this mail and pan" })
+      }
+
+      // Create a new Business Info
+      
+       business = await Business({
         companyName: req.body.companyName,
         phone: req.body.phone,
         ownerName: req.body.ownerName,
@@ -52,7 +61,7 @@ router.post(
 
 router.get("/getbusniess", authuser, async (req, res) => {
   try {
-    const business = await Business.find({ user: req.user.id });
+    const business = await Business.find()
     res.json(business);
   } catch (error) {
     console.error(error);
@@ -66,6 +75,7 @@ router.put("/updatebusiness/:id", authuser, async (req, res) => {
     const business = await Business.findById(req.params.id);
     if (business.businessId === req.body.businessId) {
       await business.updateOne({ $set: req.body });
+      
       res.status(200).json("the Business Info has been updated");
     } else {
       res.status(403).json("you can update only your Buiness Info");

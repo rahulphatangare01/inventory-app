@@ -11,7 +11,7 @@ router.post('/createProduct', authuser,[
     body('quantity', 'Enter at least 1 Quantity').isLength({ min: 1 }),
     body('price', 'Enter a product price').isLength({ min: 1 }),
     // body('companyName', 'Enter a company  Name').isLength({ min: 1 }),
-    body('model', 'Enter a Product Model').isLength({ min: 1 }),
+    body('modelNo', 'Enter a Product ModelNo').isLength({ min: 1 }),
   ], async (req, res) => {
     // If there are errors, return Bad request and the errors
     const errors = validationResult(req);
@@ -19,19 +19,23 @@ router.post('/createProduct', authuser,[
       return res.status(400).json({ errors: errors.array() });
     }
     try {
+      let product = await Product.findOne({ modelNo: req.body.modelNo });
+      if (product) {
+        return res.status(400).json({ error: "Sorry  this product already exists" })
+      }
       // Create a new product
       product = await Product.create({
         name: req.body.name,
         quantity: req.body.quantity,
         price: req.body.price,
         // companyName:req.body.companyName,
-        model:req.body.model,
+        modelNo:req.body.modelNo,
       });
-      const data = {
-        product: {
-          id: product.id
-        }
-      }
+      // const data = {
+      //   product: {
+      //     id: product.id
+      //   }
+      // }
       // res.json(product)
       res.json({ product })
   
@@ -40,12 +44,18 @@ router.post('/createProduct', authuser,[
       res.status(500).send("Internal Server Error");
     }
   })
-//  Rote no --> 3 Route for GET product
+//  Rote no --> 2 Route for GET product
 
 
-  router.get('/getproduct/:id', authuser,async (req,res)=>{
+  router.get('/getproduct', authuser,async (req,res)=>{
     try {
-        const product = await Product.findById(req.params.id);
+        const product = await Product.find();
+        // const productCount = await Product.countDocuments()
+        // res.status(200).json({
+        //   success:true,
+        //   product,
+        //   productCount,
+        //   })
         res.status(200).json(product)
     } catch (err) {
         res.status(500).json(err)

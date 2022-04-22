@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const buyerSchema = new mongoose.Schema ({
-  name:{
+  Ownername:{
     type:String,
     required:true,
   },
@@ -19,14 +19,30 @@ const buyerSchema = new mongoose.Schema ({
     type:String,
     required:true,
   },
-  productName:{
-    type:String,
-    required:true,
+  address: {
+    type: String,
+    required: true,
   },
-  stock:{
-    type:Number,
-    required:true,
-  }
+  country: {
+    type: String,
+    required: true,
+  },
+  state: {
+    type: String,
+    required: true,
+  },
+  zip: {
+    type: Number,
+    required: true,
+  },
+  // productName:{
+  //   type:String,
+  //   required:true,
+  // },
+  // stock:{
+  //   type:Number,
+  //   required:true,
+  // }
 })
 
 const buyerModel = mongoose.model('buyer',buyerSchema)

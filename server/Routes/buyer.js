@@ -9,12 +9,14 @@ router.post(
   "/createbuyer",
   authuser,
   [
-    body("name", "Enter a valid  name").isLength({ min: 3 }),
+    body("Ownername", "Enter a valid  Ownername").isLength({ min: 3 }),
     body("email", "Enter a valid email").isEmail(),
     body("phone", "Enter a 10 character ").isLength({ min: 10 }),
     body("companyName", "Enter a company Name ").isLength({ min: 3 }),
-    body("productName", "Enter a valid product").isLength({ min: 3 }),
-    body("stock", "Enter a valid quantity ").isLength({ min: 3 }),
+    body("address", "Enter a valid Address ").isLength({ min: 3 }),
+    body("country", "Enter a country Name ").isLength({ min: 3 }),
+    body("state", "Enter a State ").isLength({ min: 3 }),
+    body("zip", "Enter a Zip code ").isLength({ min: 5 }),
   ],
   async (req, res) => {
     // If there are errors, return Bad request and the errors
@@ -23,14 +25,24 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
     try {
+      let  buyer = await Buyer.findOne({ 
+        email: req.body.email
+      
+     });
+     if (buyer) {
+       return res.status(400).json({ error: "This buyer is allready register with this  Email " })
+     }
       // Create a new product
-      let buyer = await Buyer({
-        name: req.body.name,
+       buyer = await Buyer({
+        Ownername: req.body.Ownername,
         email: req.body.email,
         phone: req.body.phone,
         companyName: req.body.companyName,
-        productName: req.body.productName,
-        stock: req.body.stock,
+        address: req.body.address,
+        country: req.body.country,
+        state: req.body.state,
+        zip: req.body.zip,
+    
         
       });
      buyer.save()
@@ -56,7 +68,7 @@ router.post(
 
 router.get("/getbuyer", authuser, async (req, res) => {
   try {
-    const buyer = await Buyer.find({ user: req.user.id });
+    const buyer = await Buyer.find();
     res.json(buyer);
   } catch (error) {
     console.error(error);
@@ -70,7 +82,7 @@ router.put("/updatebuyer/:id", authuser, async (req, res) => {
     const buyer = await Buyer.findById(req.params.id);
     if (buyer.buyerId === req.body.buyerId) {
       await buyer.updateOne({ $set: req.body });
-      res.status(200).json("the buyer Info has been updated");
+      res.status(200).json(buyer);
     } else {
       res.status(403).json("you can update only your  Info");
     }
@@ -86,9 +98,9 @@ router.delete("/deletebuyer/:id", authuser, async (req, res) => {
     const buyer = await Buyer.findById(req.params.id);
     if (buyer.buyerId === req.body.buyerId) {
       await buyer.deleteOne();
-      res.status(200).json("the business Info has been deleted");
+      res.status(200).json(buyer);
     } else {
-      res.status(403).json("you can delete only your business Info");
+      res.status(401).json("you can delete only your business Info");
     }
   } catch (err) {
     res.status(500).json(err);
