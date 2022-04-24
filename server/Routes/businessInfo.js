@@ -56,6 +56,7 @@ router.post(
     }
   }
 );
+
 //  Rote no --> 2  Route for GET BusinessInfo
 
 
@@ -70,20 +71,51 @@ router.get("/getbusniess", authuser, async (req, res) => {
 });
 //  Rote no --> 3 Route for Update product
 
-router.put("/updatebusiness/:id", authuser, async (req, res) => {
-  try {
-    const business = await Business.findById(req.params.id);
-    if (business.businessId === req.body.businessId) {
-      await business.updateOne({ $set: req.body });
+// router.put("/updatebusiness/:id", authuser, async (req, res) => {
+//   try {
+//     const business = await Business.findById(req.params.id);
+//     if (business.businessId === req.body.businessId) {
+//       await business.updateOne({ $set: req.body });
       
-      res.status(200).json("the Business Info has been updated");
-    } else {
-      res.status(403).json("you can update only your Buiness Info");
-    }
-  } catch (err) {
-    res.status(500).json(err);
+//       res.status(200).json("the Business Info has been updated");
+//     } else {
+//       res.status(403).json("you can update only your Buiness Info");
+//     }
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
+
+
+router.put("/updatebusiness/:id",authuser , async (req, res) => {
+  const { companyName,phone,ownerName,email,address,country,state,zip,pan } = req.body;
+
+  try {
+      // Create a new Bussiness  object
+      const newbusiness = {};
+      if (companyName) { newbusiness.companyName = companyName };
+      if (phone) { newbusiness.phone = phone };
+      if (ownerName) { newbusiness.ownerName = ownerName };
+      if (email) { newbusiness.email = email };
+      if (address) { newbusiness.address = address };
+      if (country) { newbusiness.country = country };
+      if (state) { newbusiness.state = state };
+      if (zip) { newbusiness.zip = zip };
+      if (pan) { newbusiness.pan = pan };
+
+
+      // Find the note to be updated and update it
+      let business = await Business.findById(req.params.id);
+      if (!business) { return res.status(404).send("Not Found") }
+      business = await Business.findByIdAndUpdate(req.params.id, { $set: newbusiness }, { new: true })
+      res.json({ business });
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).send("Internal Server Error");
   }
-});
+})
+
+
 
 //  Rote no --> 4 Route for Delete product
 

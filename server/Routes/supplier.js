@@ -61,19 +61,33 @@ router.get("/getsupplier", authuser, async (req, res) => {
 });
 //  Rote no --> 3 Route for Update product
 
-router.put("/updatesupplier/:id", authuser, async (req, res) => {
+router.put('/updatesupplier/:id',authuser , async (req, res) => {
+  const { companyName,phone,ownerName,email,address,country,state,zip,pan } = req.body;
+
   try {
-    const supplier = await Supplier.findById(req.params.id);
-    if (supplier.supplierId === req.body.supplierId) {
-      await supplier.updateOne({ $set: req.body });
-      res.status(200).json("the Supplier Info has been updated");
-    } else {
-      res.status(403).json("you can update only your Info");
-    }
-  } catch (err) {
-    res.status(500).json(err);
+      // Create a new supplier  object
+      const newsupplier = {};
+      if (companyName) { newsupplier.companyName = companyName };
+      if (phone) { newsupplier.phone = phone };
+      if (ownerName) { newsupplier.ownerName = ownerName };
+      if (email) { newsupplier.email = email };
+      if (address) { newsupplier.address = address };
+      if (country) { newsupplier.country = country };
+      if (state) { newsupplier.state = state };
+      if (zip) { newsupplier.zip = zip };
+      if (pan) { newsupplier.pan = pan };
+
+
+      // Find the note to be updated and update it
+      let supplier = await Supplier.findById(req.params.id);
+      if (!supplier) { return res.status(404).send("Not Found") }
+      supplier = await Supplier.findByIdAndUpdate(req.params.id, { $set: newsupplier }, { new: true })
+      res.json({ supplier });
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).send("Internal Server Error");
   }
-});
+})
 
 //  Rote no --> 4 Route for Delete product
 
